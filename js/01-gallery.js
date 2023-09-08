@@ -28,24 +28,62 @@ function createMarkup(array) {
 }
 
 
+// ----------- без ESC
 
+
+// function handleGalleryClick(event) {
+//   event.preventDefault();
+//     if (event.target === event.currentTarget) {
+//         return
+//   }
+//     const targetElement = event.target.closest('.gallery__item');
+//   const galleryData = targetElement.dataset.preview;
+//   const galleryInfo = galleryItems.find(card => card.preview === galleryData);
+
+//   const instance = basicLightbox.create(`
+//   <div class="modal">
+//   <img src="${galleryInfo.original}" alt="${galleryInfo.description}" />
+//   </div>`
+//   );
+
+//   instance.show();
+// };
+
+// // console.log(galleryItems);
+
+let modalInstance = null;
 
 function handleGalleryClick(event) {
   event.preventDefault();
-    if (event.target === event.currentTarget) {
-        return
+  if (event.target === event.currentTarget) {
+    return;
   }
-    const targetElement = event.target.closest('.gallery__item');
+  const targetElement = event.target.closest('.gallery__item');
   const galleryData = targetElement.dataset.preview;
   const galleryInfo = galleryItems.find(card => card.preview === galleryData);
 
-  const instance = basicLightbox.create(`
-  <div class="modal">
-  <img src="${galleryInfo.original}" alt="${galleryInfo.description}" />
-  </div>`
-  );
+  const modalContent = `
+    <div class="modal">
+      <img src="${galleryInfo.original}" alt="${galleryInfo.description}" />
+    </div>
+  `;
 
-  instance.show();
-};
+  modalInstance = basicLightbox.create(modalContent);
 
-// console.log(galleryItems);
+  modalInstance.show();
+
+  // Додаємо слухача клавіш "Escape"
+  document.addEventListener('keydown', handleEscapeKeyPress);
+}
+
+function handleEscapeKeyPress(event) {
+  if (event.key === 'Escape') {
+    // Закрити модальне вікно
+    modalInstance.close();
+
+    // Видаляємо слухача клавіш "Escape" після закриття модального вікна
+    document.removeEventListener('keydown', handleEscapeKeyPress);
+  }
+}
+
+
